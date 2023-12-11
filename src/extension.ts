@@ -1,26 +1,78 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+let startTime: Date | undefined;
+let timerStatusBarItem: vscode.StatusBarItem;
+let timerButton: vscode.StatusBarItem;
+let timerDisplay: vscode.StatusBarItem;
+let timerInterval: NodeJS.Timer | undefined;
+
 export function activate(context: vscode.ExtensionContext) {
+    console.log('Votre extension "clockingtimer" est active.');
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "clockingtimer" is now active!');
+    // Créer le bouton "Start Timer"
+    timerButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    timerButton.text = `$(clock) Start Timer`;
+    timerButton.command = 'clockingtimer.toggleTimer';
+    timerButton.show();
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('clockingtimer.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Clocking Timer!');
-	});
+    // Créer l'affichage du chronomètre
+    timerDisplay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 99);
+    timerDisplay.text = `Timer: 00h 00m 00s`;
+    timerDisplay.show();
 
-	context.subscriptions.push(disposable);
+    let toggleTimerCommand = vscode.commands.registerCommand('clockingtimer.toggleTimer', toggleTimer);
+    context.subscriptions.push(toggleTimerCommand, timerButton, timerDisplay);
+
+    // Démarrer le timer automatiquement si nécessaire
+    startTimer();
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+function toggleTimer() {
+    if (!startTime) {
+        startTimer();
+    } else {
+        stopTimer();
+    }
+}
+
+function startTimer() {
+    startTime = new Date();
+    timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval as NodeJS.Timeout);
+        timerInterval = undefined;
+    }
+    startTime = undefined;
+    timerDisplay.text = `Timer: 0h 0m 0s`;
+}
+
+function updateTimerDisplay() {
+    if (!startTime) {return;}
+    const currentTime = new Date();
+    const elapsedMillis = currentTime.getTime() - startTime.getTime();
+    timerDisplay.text = `Timer: ${formatElapsedTime(elapsedMillis)}`;
+}
+
+function formatElapsedTime(elapsedMillis: number): string {
+    let seconds = Math.floor(elapsedMillis / 1000);
+    let minutes = Math.floor(seconds / 60);
+    seconds = seconds % 60;
+    let hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+    return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+export function deactivate() {
+    if (timerInterval) {
+        clearInterval(timerInterval as NodeJS.Timeout);
+    }
+    if (timerButton) {
+        timerButton.dispose();
+    }
+    if (timerDisplay) {
+        timerDisplay.dispose();
+    }
+}

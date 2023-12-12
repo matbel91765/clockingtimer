@@ -6,6 +6,7 @@ let timerButton: vscode.StatusBarItem;
 let timerDisplay: vscode.StatusBarItem;
 let timerInterval: NodeJS.Timer | undefined;
 let extensionContext: vscode.ExtensionContext;
+let activityTimeout: NodeJS.Timeout | undefined;
 
 
 export function activate(context: vscode.ExtensionContext) {
@@ -22,6 +23,9 @@ export function activate(context: vscode.ExtensionContext) {
     timerDisplay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 99);
     timerDisplay.text = `Timer: 00h 00m 00s`;
     timerDisplay.show();
+
+    vscode.workspace.onDidChangeTextDocument(onUserActivity, null, context.subscriptions);
+    vscode.window.onDidChangeActiveTextEditor(onUserActivity, null, context.subscriptions);
 
     let toggleTimerCommand = vscode.commands.registerCommand('clockingtimer.toggleTimer', toggleTimer);
     context.subscriptions.push(toggleTimerCommand, timerButton, timerDisplay);
@@ -90,6 +94,22 @@ function updateTimerDisplay() {
     const currentTime = new Date();
     const elapsedMillis = currentTime.getTime() - startTime.getTime();
     timerDisplay.text = `Timer: ${formatElapsedTime(elapsedMillis)}`;
+}
+
+function onUserActivity() {
+    if (!isTimerRunning) {
+        startTimer();
+    }
+
+    if (activityTimeout) {
+        clearTimeout(activityTimeout);
+    }
+
+    activityTimeout = setTimeout(() => {
+        if (isTimerRunning) {
+            stopTimer();
+        }
+    }, 30000); // 30 secondes d'inactivité
 }
 
 function formatElapsedTime(elapsedMillis: number): string {

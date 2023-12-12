@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 let startTime: Date | undefined;
-let timerStatusBarItem: vscode.StatusBarItem;
+let isTimerRunning: boolean = false;
 let timerButton: vscode.StatusBarItem;
 let timerDisplay: vscode.StatusBarItem;
 let timerInterval: NodeJS.Timer | undefined;
@@ -11,7 +11,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Créer le bouton "Start Timer"
     timerButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-    timerButton.text = `$(clock) Start Timer`;
+    timerButton.text = `$(clock) Stop Timer`;
     timerButton.command = 'clockingtimer.toggleTimer';
     timerButton.show();
 
@@ -28,25 +28,32 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function toggleTimer() {
-    if (!startTime) {
-        startTimer();
-    } else {
+    if (isTimerRunning) {
         stopTimer();
+        timerButton.text = `$(clock) Start Timer`;
+    } else {
+        startTimer();
+        timerButton.text = `$(clock) Stop Timer`;
     }
 }
 
 function startTimer() {
-    startTime = new Date();
-    timerInterval = setInterval(updateTimerDisplay, 1000);
+    if (!isTimerRunning) {
+        startTime = startTime ? new Date(Date.now() - (new Date().getTime() - startTime.getTime())) : new Date();
+        timerInterval = setInterval(updateTimerDisplay, 1000);
+        updateTimerDisplay();
+        isTimerRunning = true;
+    }
 }
 
 function stopTimer() {
-    if (timerInterval) {
-        clearInterval(timerInterval as NodeJS.Timeout);
-        timerInterval = undefined;
+    if (isTimerRunning) {
+        if (timerInterval) {
+            clearInterval(timerInterval as NodeJS.Timeout);
+            timerInterval = undefined;
+        }
+        isTimerRunning = false;
     }
-    startTime = undefined;
-    timerDisplay.text = `Timer: 0h 0m 0s`;
 }
 
 function updateTimerDisplay() {

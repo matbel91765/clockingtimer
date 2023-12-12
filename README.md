@@ -35,4 +35,4 @@ Créé par Belouar-Pruvot Mathis
 
 ## Licence
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE]./LICENCE pour plus de détails.
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](./LICENCE) pour plus de détails.

@@ -14,7 +14,7 @@ Pour installer l'extension, accédez au [VSCode Marketplace](lien vers votre ext
 
 Pour utiliser l'extension, cliquez sur le bouton "Start Timer" dans la barre d'état pour commencer à suivre le temps. Le bouton changera en "Stop Timer" une fois activé.
 
-![Utilisation]./src/time-bar.png
+![Utilisation](./res/time-bar.png)
 
 ## Fonctionnalités
 

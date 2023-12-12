@@ -2,7 +2,8 @@
   "name": "clockingtimer",
   "displayName": "Clocking Timer",
   "description": "Do you want to know how many time you pass on your projet ? This extension is for you !",
-  "version": "0.0.1",
+  "icon": "res/icon.png",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.85.0"
   },

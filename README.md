@@ -8,7 +8,7 @@ Cette extension VSCode permet de suivre le temps passé sur un projet. Elle offr
 
 ## Installation
 
-Pour installer l'extension, accédez au [VSCode Marketplace](lien vers votre extension) et cliquez sur "Installer".
+Pour installer l'extension, accédez au [VSCode Marketplace] et cliquez sur "Installer".
 
 ## Utilisation
 

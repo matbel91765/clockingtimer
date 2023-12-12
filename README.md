@@ -27,7 +27,7 @@ Les contributions sont toujours les bienvenues! Veuillez forker le repo et crée
 
 ## Support et Feedback
 
-Pour toute question ou suggestion, ouvrez une issue sur [GitHub]"https://github.com/matbel91765/clockingtimer/issues".
+Pour toute question ou suggestion, ouvrez une issue sur [GitHub](https://github.com/matbel91765/clockingtimer/issues).
 
 ## Auteurs et Remerciements
 

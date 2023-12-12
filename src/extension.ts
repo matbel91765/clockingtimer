@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
     console.log('Votre extension "clockingtimer" est active.');
 
     // Créer le bouton "Start Timer"
-    timerButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    timerButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 98);
     timerButton.command = 'clockingtimer.toggleTimer';
     timerButton.show();
 

@@ -35,4 +35,4 @@ Créé par Belouar-Pruvot Mathis
 
 ## Licence
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](https://github.com/matbel91765/clockingtimer/blob/master/LICENCE) pour plus de détails.
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](https://github.com/matbel91765/clockingtimer/blob/master/LICENSE) pour plus de détails.

@@ -14,7 +14,7 @@ Pour installer l'extension, accédez au et cliquez sur "Installer".
 
 Pour utiliser l'extension, cliquez sur le bouton "Start Timer" dans la barre d'état pour commencer à suivre le temps. Le bouton changera en "Stop Timer" une fois activé.
 
-![Utilisation](./res/time-bar.png)
+![Utilisation](https://github.com/matbel91765/clockingtimer/blob/master/res/time-bar.png)
 
 ## Fonctionnalités
 

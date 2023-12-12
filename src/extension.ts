@@ -5,8 +5,11 @@ let isTimerRunning: boolean = false;
 let timerButton: vscode.StatusBarItem;
 let timerDisplay: vscode.StatusBarItem;
 let timerInterval: NodeJS.Timer | undefined;
+let extensionContext: vscode.ExtensionContext;
+
 
 export function activate(context: vscode.ExtensionContext) {
+    extensionContext = context;
     console.log('Votre extension "clockingtimer" est active.');
 
     // Créer le bouton "Start Timer"
@@ -22,6 +25,15 @@ export function activate(context: vscode.ExtensionContext) {
 
     let toggleTimerCommand = vscode.commands.registerCommand('clockingtimer.toggleTimer', toggleTimer);
     context.subscriptions.push(toggleTimerCommand, timerButton, timerDisplay);
+
+    let resetTimerCommand = vscode.commands.registerCommand('clockingtimer.resetTimer', resetTimer);
+    context.subscriptions.push(resetTimerCommand);
+
+    let savedTime = context.workspaceState.get<number>('elapsedTime');
+    if (savedTime) {
+        startTime = new Date(Date.now() - savedTime);
+        updateTimerDisplay();
+    }
 
     // Démarrer le timer automatiquement si nécessaire
     startTimer();
@@ -39,7 +51,8 @@ function toggleTimer() {
 
 function startTimer() {
     if (!isTimerRunning) {
-        startTime = startTime ? new Date(Date.now() - (new Date().getTime() - startTime.getTime())) : new Date();
+        let savedTime = extensionContext.workspaceState.get<number>('elapsedTime');
+        startTime = savedTime ? new Date(Date.now() - savedTime) : new Date();
         timerInterval = setInterval(updateTimerDisplay, 1000);
         updateTimerDisplay();
         isTimerRunning = true;
@@ -47,14 +60,30 @@ function startTimer() {
 }
 
 function stopTimer() {
-    if (isTimerRunning) {
+    if (isTimerRunning && startTime) {
         if (timerInterval) {
             clearInterval(timerInterval as NodeJS.Timeout);
             timerInterval = undefined;
         }
+        let elapsed = new Date().getTime() - startTime.getTime();
+        extensionContext.workspaceState.update('elapsedTime', elapsed);
         isTimerRunning = false;
     }
 }
+
+
+function resetTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval as NodeJS.Timeout);
+        timerInterval = undefined;
+    }
+    startTime = undefined;
+    isTimerRunning = false;
+    timerDisplay.text = `Timer: 00h 00m 00s`;
+    timerButton.text = `$(clock) Start Timer`;
+    extensionContext.workspaceState.update('elapsedTime', undefined);
+}
+
 
 function updateTimerDisplay() {
     if (!startTime) {return;}

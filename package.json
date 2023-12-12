@@ -18,6 +18,10 @@
       {
         "command": "clockingtimer.timer",
         "title": "Timer"
+      },
+      {
+        "command": "clockingtimer.resetTimer",
+        "title": "Reset Timer"
       }
     ]
   },

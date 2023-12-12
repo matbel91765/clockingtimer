@@ -1,6 +1,6 @@
 # Clocking Timer
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=VotreNom.ExtensionName)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=matbel91765.clockingtimer)
 
 ## Description
 
@@ -8,13 +8,13 @@ Cette extension VSCode permet de suivre le temps passé sur un projet. Elle offr
 
 ## Installation
 
-Pour installer l'extension, accédez au et cliquez sur "Installer".
+Pour installer l'extension, accédez au [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=matbel91765.clockingtimer) et cliquez sur "Installer".
 
 ## Utilisation
 
 Pour utiliser l'extension, cliquez sur le bouton "Start Timer" dans la barre d'état pour commencer à suivre le temps. Le bouton changera en "Stop Timer" une fois activé.
 
-![Utilisation](https://github.com/matbel91765/clockingtimer/blob/master/res/time-bar.png)
+![Utilisation](https://github.com/matbel91765/clockingtimer/blob/master/res/time-bar.png?raw=true)
 
 ## Fonctionnalités
 

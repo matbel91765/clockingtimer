@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Créer l'affichage du temps total
     totalElapsedTime = context.workspaceState.get<number>('totalElapsedTime') || 0;
-    totalTimeDisplay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 98);
+    totalTimeDisplay = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1); 
     totalTimeDisplay.text = `Total Time: ${formatElapsedTime(totalElapsedTime)}`;
     totalTimeDisplay.show();
 
@@ -47,6 +47,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.workspace.onDidChangeTextDocument(onUserActivity, null, context.subscriptions);
     vscode.window.onDidChangeActiveTextEditor(onUserActivity, null, context.subscriptions);
+
+    context.subscriptions.push(vscode.workspace.onDidChangeWorkspaceFolders((e) => {
+        handleWorkspaceChange();
+    }));
 }
 
 function toggleTimer() {
@@ -63,7 +67,7 @@ function startTimer() {
     if (!isTimerRunning) {
         startTime = new Date();
         timerInterval = setInterval(updateTimerDisplay, 1000);
-        timerButton.text = `$(clock) Stop Timer`; // Met à jour le texte pour "Stop Timer"
+        timerButton.text = `$(clock) Stop Timer`;
         isTimerRunning = true;
     }
 }
@@ -75,11 +79,11 @@ function stopTimer() {
 
         let sessionTime = new Date().getTime() - startTime.getTime();
         elapsedSessionTime += sessionTime;
-        totalElapsedTime += sessionTime; // Ajouter le temps de session au temps total
+        totalElapsedTime += sessionTime;
         extensionContext.workspaceState.update('elapsedTime', elapsedSessionTime);
-        extensionContext.workspaceState.update('totalElapsedTime', totalElapsedTime); // Mettre à jour le temps total
+        extensionContext.workspaceState.update('totalElapsedTime', totalElapsedTime);
 
-        totalTimeDisplay.text = `Total Time: ${formatElapsedTime(totalElapsedTime)}`; // Mettre à jour l'affichage du temps total
+        totalTimeDisplay.text = `Total Time: ${formatElapsedTime(totalElapsedTime)}`;
 
         timerButton.text = `$(clock) Start Timer`;
         isTimerRunning = false;
@@ -91,10 +95,15 @@ function resetTimer() {
     timerInterval = undefined;
     startTime = undefined;
     elapsedSessionTime = 0;
+    totalElapsedTime = 0;
     isTimerRunning = false;
+
     timerDisplay.text = `Timer: 00h 00m 00s`;
+    totalTimeDisplay.text = `Total Time: 00h 00m 00s`;
     timerButton.text = `$(clock) Start Timer`;
+
     extensionContext.workspaceState.update('elapsedTime', undefined);
+    extensionContext.workspaceState.update('totalElapsedTime', undefined);
 }
 
 function updateTimerDisplay() {
@@ -127,7 +136,25 @@ function formatElapsedTime(elapsedMillis: number): string {
     return `${hours}h ${minutes}m ${seconds}s`;
 }
 
+function handleWorkspaceChange() {
+    if (isTimerRunning && startTime) {
+        let sessionTime = new Date().getTime() - startTime.getTime();
+        elapsedSessionTime += sessionTime;
+        totalElapsedTime += sessionTime;
+        extensionContext.workspaceState.update('elapsedTime', elapsedSessionTime);
+        extensionContext.workspaceState.update('totalElapsedTime', totalElapsedTime);
+    }
+}
+
 export function deactivate() {
+    if (isTimerRunning && startTime) {
+        let sessionTime = new Date().getTime() - startTime.getTime();
+        elapsedSessionTime += sessionTime;
+        totalElapsedTime += sessionTime;
+        extensionContext.workspaceState.update('elapsedTime', elapsedSessionTime);
+        extensionContext.workspaceState.update('totalElapsedTime', totalElapsedTime);
+    }
+
     if (timerInterval) {
         clearInterval(timerInterval as NodeJS.Timeout);
     }

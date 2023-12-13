@@ -86,7 +86,6 @@ export class TimerController {
             clearInterval(this._timerInterval as NodeJS.Timeout);
             this._timerInterval = undefined;
         }
-
         // Toute autre nettoyage nécessaire
     }
 

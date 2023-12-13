@@ -3,20 +3,19 @@ import { TimerController } from './timerController';
 import { UIComponents } from './uiComponents';
 import { handleUserActivity, handleWorkspaceChange } from './eventHandlers';
 
-// Définissez timerController et uiComponents ici pour qu'ils soient accessibles dans les fonctions activate et deactivate
 let timerController: TimerController;
 let uiComponents: UIComponents;
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Votre extension "clockingtimer" est active.');
 
-    // Créez d'abord timerController sans uiComponents
+    // Création timerController sans uiComponents
     timerController = new TimerController(context);
 
-    // Créez ensuite uiComponents avec timerController
+    // Création uiComponents avec timerController
     uiComponents = new UIComponents(context, timerController);
 
-    // Maintenant, mettez à jour timerController avec uiComponents
+    // Mise à jour du timerController avec uiComponents
     timerController.setUIComponents(uiComponents);
 
     context.subscriptions.push(vscode.commands.registerCommand('clockingtimer.toggleTimer', () => uiComponents.toggleTimer()));
@@ -30,7 +29,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate(context: vscode.ExtensionContext) {
-    // Assurez-vous que timerController et uiComponents sont arrêtés et disposés proprement
     if (timerController) {
         timerController.dispose();
     }
